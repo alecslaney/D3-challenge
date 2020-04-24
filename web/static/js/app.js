@@ -1,5 +1,5 @@
 // Define SVG area dimensions
-var svgWidth = 960;
+var svgWidth = 970;
 var svgHeight = 500;
 
 // Define the chart's margins
@@ -10,6 +10,7 @@ var margin = {
     left: 60
   };
 
+// Calculate chart dimensions
 var chartWidth = svgWidth - margin.left - margin.right;
 var chartHeight = svgHeight - margin.top - margin.bottom;
 
@@ -26,7 +27,7 @@ var chartGroup = svg.append("g")
 d3.csv("static/data/data.csv").then(data => {
 
     // Prints the data
-    console.log(data);
+    // console.log(data);
 
     // Ensures type of data is correct
     data.forEach(data => {
@@ -62,12 +63,11 @@ d3.csv("static/data/data.csv").then(data => {
             .attr("x", (data) => xScale(data.age))
             .attr("y", (data) => yScale(data.income) + 3)
     
-    // Places axes onto the chart
+    // Generates axes for the chart
     var bottomAxis = d3.axisBottom(xScale);
     var leftAxis = d3.axisLeft(yScale);
 
-    // Append an SVG group element to the SVG area, create the bottom axis inside of it
-    // Translate the bottom axis to the bottom of the page
+    // Position axes
     chartGroup.append("g")
         .classed("axis", true)
         .attr("transform", "translate(0, " + chartHeight + ")")
@@ -76,4 +76,25 @@ d3.csv("static/data/data.csv").then(data => {
     chartGroup.append("g")
         .classed("axis", true)
         .call(leftAxis);
+    
+    // Plot x-axis title
+    chartGroup.append("text")
+		.attr("transform", "translate(" + (chartWidth/2) + ", " + (chartHeight + 40) + ")")
+		.attr("class", "aText")
+		.text("Age (years)");
+    
+    // Plot y-axis title
+    chartGroup.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", 0 - chartHeight / 2)
+        .attr("y", 0 - margin.left + 40)
+        .attr("dy", "-1.5em")
+        .attr("class", "aText")
+        .text("Income (US Dollars)");
+
+    // Plot title
+    chartGroup.append("text")
+        .attr("transform", "translate(" + (chartWidth/2) + ", " + (-20) + " )")
+		.attr("class", "aText")
+		.text("Age vs. Income in the USA");
 })
